@@ -1,14 +1,6 @@
 <!DOCTYPE html>
-
-
-<!-- Ultimate Game Stash file--> 
-<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
-
-
-
-
-
-
+<html lang="en">
+<head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <style>
@@ -59,79 +51,22 @@
       background: white;
       transition: width 0.2s;
     }
-  </style><script type="text/javascript">
-    window.SDK_OPTIONS = {
-        gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
-        onEvent: function (a) {
-            switch (a.name) {
-                case "SDK_GAME_PAUSE":
-                    break;
-                case "SDK_GAME_START":
-                    break;
-                case "SDK_READY":
-                    break;
-            }
-        }
-    };
-    (function (a, b, c) {
-        var d = a.getElementsByTagName(b)[0];
-        if (!a.getElementById(c)) {
-            var e = a.createElement(b);
-            e.id = c;
-            e.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js";
-            d.parentNode.insertBefore(e, d);
-        }
-    })(document, "script", "gamemonetize-sdk");
-</script><style type="text/css">#button {
-  display:none;
-}
-.imgb_vis {
-  animation: imgb-animation 7s linear;
-}
-@keyframes imgb-animation {
-  10% {
-    transform: translateX(0);
-  }
-  20% {
-    transform: translateX(100px);
-  }
-  90% {
-    transform: translateX(100px);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}</style><script type="text/javascript">
-              window.yandexMetricaCounterId = parseInt(102300209);
-          </script><script type="text/javascript">
-              (function (m, e, t, r, i, k, a) {
-                  m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
-                  m[i].l = 1 * new Date();
-                  for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
-                  k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
-              })(window, document, "script", "", "ym");
-  
-              ym(window.yandexMetricaCounterId, "init", {
-                  clickmap: false,
-                  trackLinks: true,
-                  accurateTrackBounce: true
-              });
-          </script></head>
-
+  </style>
+</head>
 
 <body>
   <div id="unity-container">
     <canvas id="unity-canvas" style="cursor: default;" width="787" height="511"></canvas>
   </div>
 
-  <div id="loading-cover" style="display: none;">
+  <div id="loading-cover">
     <div id="progress-container">
-      <div id="progress-fill" style="width: 100%;"></div>
+      <div id="progress-fill"></div>
     </div>
   </div>
 
 <script>
-
+// Silence Console Logs
 (function(){window.console = {
     log: function () {},
     warn: function () {},
@@ -159,6 +94,7 @@ let allGamesData = 'no data';
 var statsSaves = 'no data';
 var player = null, payments = null, initGame = false, nowFullAdOpen = false;
 
+// Navigator Overrides
 try {
   Object.defineProperty(navigator, 'language',  { get: () => 'en-US', configurable: true });
   Object.defineProperty(navigator, 'languages', { get: () => ['en-US','en'], configurable: true });
@@ -168,6 +104,7 @@ try {
 }
 try { document.documentElement.lang = 'en'; } catch{}
 
+// Stubbed out SDK Objects
 (function(){
   const FORCED_LANG = 'en';
   window.YaGames = {
@@ -180,12 +117,11 @@ try { document.documentElement.lang = 'en'; } catch{}
         adv: {
           showFullscreenAdv({callbacks}={}){
             try{ callbacks?.onOpen?.(); }catch{}
-            try{ InterAdvShow(); }catch{}
-            setTimeout(()=>{ try{ callbacks?.onClose?.(true); }catch{} }, 300);
+            setTimeout(()=>{ try{ callbacks?.onClose?.(true); }catch{} }, 50);
           },
           showRewardedVideo({callbacks}={}){
             try{ callbacks?.onOpen?.(); }catch{}
-            setTimeout(()=>{ try{ callbacks?.onRewarded?.(); callbacks?.onClose?.(); }catch{} }, 300);
+            setTimeout(()=>{ try{ callbacks?.onRewarded?.(); callbacks?.onClose?.(); }catch{} }, 50);
           }
         },
         features: { LoadingAPI: { ready(){   } } },
@@ -216,7 +152,8 @@ function sendYG(method, arg){
                        : myGameInstance?.SendMessage('YandexGame', method, String(arg)); }catch{}
 }
 
-function LogStyledMessage(msg, style){ try{ console.log('%c'+(msg??''), style||'color:#FFDF73;background:#454545'); }catch{ console.log(msg); } }
+function LogStyledMessage(msg, style){ try { console.log('%c'+(msg??''), style||'color:#FFDF73;background:#454545'); } catch { console.log(msg); } }
+
 function RequestingEnvironmentData(){
   const isM = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const json = JSON.stringify({
@@ -228,6 +165,7 @@ function RequestingEnvironmentData(){
   environmentData = json; window.environmentData = json;
   sendYG('SetEnvirData', json);
 }
+
 function InitPlayer(){
   const data = JSON.stringify({
     playerAuth:'rejected', playerName:'unauthorized',
@@ -236,6 +174,7 @@ function InitPlayer(){
   playerData = data;
   sendYG('SetAuth', data);
 }
+
 function LoadCloud(){ cloudSaves = 'no data'; sendYG('SetLoadSaves','no data'); }
 function InitReview(){ reviewData = 'false'; }
 function Review(){}
@@ -290,7 +229,7 @@ async function mergeUnityWebFiles(baseUrl, filePrefix, totalParts, extension, on
 }
 
 async function initializeGame() {
-  const baseUrl  = "https://cdn.jsdelivr.net/gh/goldie-code/specification@c351c9358400eeeb6a447895ae2c6877c44e4cd0/util";
+  const baseUrl   = "https://cdn.jsdelivr.net/gh/goldie-code/specification@c351c9358400eeeb6a447895ae2c6877c44e4cd0/util";
   const loaderUrl = "https://cdn.jsdelivr.net/gh/goldie-code/tech@fccf9d4285000098e10a6448198ef92560a6294c/plug/src/main/loader.js";
 
   try {
@@ -327,91 +266,32 @@ async function initializeGame() {
   }
 }
 
-let lastAdTime = 0;
-let adCooldown = 10000;
-function canShowAd(){ return (Date.now() - lastAdTime) >= adCooldown; }
-
 function FocusGame(){ if (document.hasFocus && !document.hasFocus()) { window.focus(); } }
 
+// Instant Interstitial Bypass
 function FullAdShow() {
-  if (!canShowAd()) { sendYG('CloseInterAdv', 'false'); return; }
-  try {
-    if (nowFullAdOpen) return;
-    nowFullAdOpen = true; lastAdTime = Date.now();
-    sendYG('OpenInterAdv'); 
-
-    if (typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
-      sdk.showBanner();
-      setTimeout(function () {
-        nowFullAdOpen = false;
-        sendYG('CloseInterAdv', 'true'); 
-        FocusGame();
-      }, 3000);
-    } else {
-      nowFullAdOpen = false;
-      sendYG('CloseInterAdv', 'false');
-      FocusGame();
-    }
-  } catch (e) {
-    nowFullAdOpen = false;
-    sendYG('ErrorInterAdv');
-    sendYG('CloseInterAdv', 'false');
-    FocusGame();
-  }
+  sendYG('OpenInterAdv'); 
+  sendYG('CloseInterAdv', 'true'); 
+  FocusGame();
 }
 
 function InterAdvShow() { FullAdShow(); }
 
+// Instant Reward Bypass
 function RewardedShow(id) {
-  if (!canShowAd()) { sendYG('RewardUnavailable'); sendYG('CloseRewardedAdv'); return; }
-  try {
-    lastAdTime = Date.now();
-    sendYG('OpenRewardedAdv'); 
-
-    if (typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
-      sdk.showBanner();
-      setTimeout(function () {
-        sendYG('RewardAdv', id);         
-        sendYG('CloseRewardedAdv', 'true');
-        FocusGame();
-      }, 3000);
-    } else {
-      sendYG('RewardAdv', id);
-      sendYG('CloseRewardedAdv', 'true');
-      FocusGame();
-    }
-  } catch (e) {
-    sendYG('ErrorRewardedAdv');
-    sendYG('CloseRewardedAdv', 'false');
-    FocusGame();
-  }
+  sendYG('OpenRewardedAdv'); 
+  sendYG('RewardAdv', id);         
+  sendYG('CloseRewardedAdv', 'true');
+  FocusGame();
 }
 
 function RewardedAdvShow(id) { 
   RewardedShow(id); 
 }
 
-function StickyAdActivity(show) {
-    try {
-        ysdk.adv.getBannerAdvStatus().then(({ stickyAdvIsShowing, reason }) => {
-            if (stickyAdvIsShowing) {
-                if (!show) {
-                    ysdk.adv.hideBannerAdv();
-                }
-            }
-            else if (reason) {
-                LogStyledMessage('StickyAdv are not shown. Reason:', reason);
-            }
-            else if (show) {
-                ysdk.adv.showBannerAdv();
-            }
-        })
-    } catch (e) {
-        console.error('CRASH StickyAdv activity: ', e.message);
-    }
-}
+function StickyAdActivity(show) {}
 
-function InitGame() { initGame = true; if (nowFullAdOpen) sendYG('OpenInterAdv'); }
+function InitGame() { initGame = true; }
 function ConsumePurchases() {}
 function GetLeaderboardScores() {}
 function BuyPayments(id) {}
@@ -421,10 +301,5 @@ function OpenAuthDialog(){ if(myGameInstance){ myGameInstance.SendMessage('Yande
 
 initializeGame();
 </script>
-<script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
-
-
-<div id="button" class="imgb imgb_vis" style="position: fixed; top: 10%; left: -100px; z-index: 10; display: none;"><a target="_blank" href="https://sites.google.com/view/classroom6x/" title="More Unblocked Games 6x"><img src="https://lh4.googleusercontent.com/lUEWrXMVEr4AdjKISyJahDRJ61bwfvHdpeYm86Djn5U8oCm9dI60NGXSBqad9HUvzTXgqlkosA_hWV-VuXPjzrkGvh3_kNSgYk8ySWzXnDpbBCBiooyBbU8oBy3YBZMDkW8RcRVmDuC0raoeqZBm8kBlqs6c5mdfkJeN2aE68lXS_lcOZ5_F7lIuM6qLVg" width="100" height="30" style="cursor:pointer;" alt="More of best Classroom 6x Unblocked Games"></a></div><div id="imaContainer" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video id="imaVideo"></video></div><div id="imaContainer_new" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video2 id="imaVideo2"></video2></div><script src="https://cdn.jsdelivr.net/gh/goldie-code/tech@fccf9d4285000098e10a6448198ef92560a6294c/plug/src/main/loader.js"></script><script src="https://cdn.jsdelivr.net/gh/goldie-code/tech@cad464f628ac347e8e4795c577b7123593ac1b34/plug/src/main/lib.js"></script><noscript>
-              <div>
-              </div>
-          </noscript></body></html>
+</body>
+</html>
